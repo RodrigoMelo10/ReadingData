@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,12 +12,19 @@ import model.Country;
 
 public class JDBCExample {
 
+    //It's final because we cannot change the value
+    // this variables we can use in any function, to keeep organized
+    static final String dbServer = "jdbc:mysql://52.50.23.197:3306/world";
+    static final String user = "cctstudent";
+    static final String password = "Pass1234!";
+    
 	/**
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main( String args[] )
-	{   BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		List<Country> countries = new ArrayList<Country>();
+	public static void main( String args[] ) throws IOException {   
+	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	    List<Country> countries = new ArrayList<Country>();
 		String name = null;
 		String code = null;
 		boolean mainLoop = true;
@@ -32,220 +40,256 @@ public class JDBCExample {
 	        System.out.print("\nEnter Your Menu Choice: ");
 
 	        choice = Integer.parseInt(br.readLine());
-	        switch(choice){
-		    case 1:
-		        countries = readDataFromDatabase();
-		        for (Country country : countries) {
-	                System.out.println(country.toString());
-	            }
-		        break;
-		    case 2: 
-		        System.out.println("\nType the Country name: ");
-		        name = br.readLine();
-		        
-		        countries = searchFromCountryName(name);
-	            
-	            for (Country country : countries) {
-	                System.out.println(country.toString());
-	            }
-	            countries = new ArrayList<Country>(); 
-		        break;
-		    case 3:
-		        System.out.println("\nType the Country code: ");
-		        code = br.readLine();
-		        
-		        countries = searchFromCountryCode(code);
-	            
-	            for (Country country : countries) {
-	                System.out.println(country.toString());
-	            }
-	            countries = new ArrayList<Country>();
-		        break;
-		    case 4: 
-		        //Definitions
-		        Country c = new Country();
-		        System.out.println("Enter The Coutry Name: ");
-		        c.setName(br.readLine());
-		        
-		        System.out.println("Enter The Coutry Code: ");
-	            c.setCode(br.readLine());
-	            
-	            System.out.println("Enter The Coutry Continent: ");
-	            c.setContinent(br.readLine());
-		        
-	            System.out.println("Enter The Coutry State: ");
-	            c.setHeadOfState(br.readLine());
-	            
-	            System.out.println("Enter The Coutry Suface Area: ");
-	            c.setSurfaceArea(Float.parseFloat(br.readLine()));
-	            
-	            System.out.println("Enter The Coutry Head Of State: ");
-	            c.setHeadOfState(br.readLine());
-	            
-	            insertCountryIntoDatabase(c);
-	            
-	            System.out.println("Country inserted sucessifully!!");
-		        break;
-		    case 5: 
-		        System.out.println("Exiting...");
-		        System.exit(0);
-		         break;
-		    default :
-		             break;
 
-		    }
-		    }
-		}
-		
+	    switch(choice){
+	    case 1:
+	        countries = readDataFromDatabase();
+	        for (Country country : countries) {
+                System.out.println(country.toString());
+            }
+	        break;
+	    case 2: 
+	        System.out.println("\nType the Country name: ");
+	        name = br.readLine();
 	        
-	    
-		try{
-			// Load the database driver
-			Class.forName("com.mysql.jdbc.Driver").newInstance() ;
-			 //It's final because we cannot change the value
-		    // this variables we can use in any function, to keeep organized	
-	      static final String dbServer = "jdbc:mysql://52.50.23.197:3306/world";
-	      static final String user = "cctstudent";
-	      static final String password = "Pass1234!";
-	      static final String query = "SELECT * FROM country";
-			
-			String queryByCode = "SELECT * FROM country where country.name ="+ code;
-			//String query = "INSERT INTO user( first_name, second_name) values ('Stivie' , 'Wonder');";
-			// Get a connection to the database
-			Connection conn = DriverManager.getConnection(dbServer, user, password) ;
+	        countries = searchFromCountryName(name);
+            
+            for (Country country : countries) {
+                System.out.println(country.toString());
+            }
+            countries = new ArrayList<Country>(); 
+	        break;
+	    case 3:
+	        System.out.println("\nType the Country code: ");
+	        code = br.readLine();
+	        
+	        countries = searchFromCountryCode(code);
+            
+            for (Country country : countries) {
+                System.out.println(country.toString());
+            }
+            countries = new ArrayList<Country>();
+	        break;
+	    case 4: 
+	        //Definitions
+	        Country c = new Country();
+	        System.out.println("Enter The Coutry Name: ");
+	        c.setName(br.readLine());
+	        
+	        System.out.println("Enter The Coutry Code: ");
+            c.setCode(br.readLine());
+            
+            System.out.println("Enter The Coutry Continent: ");
+            c.setContinent(br.readLine());
+	        
+            System.out.println("Enter The Coutry State: ");
+            c.setHeadOfState(br.readLine());
+            
+            System.out.println("Enter The Coutry Suface Area: ");
+            c.setSurfaceArea(Float.parseFloat(br.readLine()));
+            
+            System.out.println("Enter The Coutry Head Of State: ");
+            c.setHeadOfState(br.readLine());
+            
+            insertCountryIntoDatabase(c);
+            
+            System.out.println("Country inserted sucessifully!!");
+	        break;
+	    case 5: 
+	        System.out.println("Exiting...");
+	        System.exit(0);
+	         break;
+	    default :
+	             break;
 
-			// Get a statement from the connection
-			Statement stmt = conn.createStatement() ;
+	    }
+	    }
+	}
+	
+	private static void insertCountryIntoDatabase(Country country) {
+	    try{
+            // Load the database driver
+            Class.forName("com.mysql.jdbc.Driver").newInstance() ;
+            String queryByName = "INSERT INTO country(Name,Code,Continent,SurfaceArea,HeadOfState) values (?,?,?,?,?) ";
+            Connection conn = DriverManager.getConnection(dbServer, user, password) ;
 
-			// Execute the query
-			ResultSet rs = stmt.executeQuery(query) ;
-			//stmt.executeUpdate(query);
-			
-			// Loop through the result set
-			private static List<Country> readDataFromDatabase() {
-			    List<Country> countries = new ArrayList<Country>();
-			    try{
-		            // Load the database driver
-		            Class.forName("com.mysql.jdbc.Driver").newInstance() ;
-		            String query = "SELECT * FROM country";
-		            Connection conn = DriverManager.getConnection(dbServer, user, password) ;
+            // Get a statement from the connection
+            java.sql.PreparedStatement stmt = conn.prepareStatement(queryByName) ;
 
-		            // Get a statement from the connection
-		            Statement stmt = conn.createStatement() ;
+            // SETTING THE PARAMETERS 
+            stmt.setString(1, country.getName());
+            stmt.setString(2, country.getCode());
+            stmt.setString(3, country.getContinent());
+            stmt.setFloat(4, country.getSurfaceArea());
+            stmt.setString(5, country.getHeadOfState());
+            
+            // Execute the query
+            boolean execute = stmt.execute();
+            
+            // Close the result set, statement and the connection
+            stmt.close() ;
+            conn.close() ;
+        }
+        catch( SQLException se ){
+            System.out.println( "SQL Exception:" ) ;
 
-		            // Execute the query
-		            ResultSet rs = stmt.executeQuery(query) ;
-		            //stmt.executeUpdate(query);
-		            
-		            // Loop through the result set
-			
-			while(rs.next()) {
-				Country country = new Country();
-				country.setCode(rs.getString("Code"));
-				country.setName(rs.getString("Name") );
-				country.setContinent(rs.getString("Continent"));
-				country.setSurfaceArea(rs.getFloat("SurfaceArea"));
-				country.setHeadOfState(rs.getString("HeadOfState"));
-				countries.add(country);
-				
-				for (Country c : countries) {
-					System.out.println(c.toString());
-				}
-				
-				//System.out.println( rs.getString("Code") + "\t" + rs.getString("Name") + 
-					//	"\t" + rs.getString("Continent") + "\t"+ rs.getFloat("SurfaceArea")+ "\t" + rs.getString("HeadOfState")) ;
-			}
-			
-			
-			System.out.print("Type the Country Name: ");
-			name = br.readLine();
-			String queryByName = "SELECT * FROM country WHERE Name LIKE "+ "'"+name+"'";
-			System.out.print(queryByName);
-			
-			// Execute the query
-			rs = stmt.executeQuery(queryByName) ;
-			
-			
-			countries = new ArrayList<>();
-			while(rs.next()) {
-				Country country = new Country();
-				country.setCode(rs.getString("Code"));
-				country.setName(rs.getString("Name") );
-				country.setContinent(rs.getString("Continent"));
-				country.setSurfaceArea(rs.getFloat("SurfaceArea"));
-				country.setHeadOfState(rs.getString("HeadOfState"));
-				countries.add(country);
-				
-				for (Country c : countries) {
-					System.out.println("=====================================================");
-					System.out.println("");
-					System.out.println(c.toString());
-				}
-				System.out.print("Type the Country Name: ");
-				name = br.readLine();
-				String queryBycode = "SELECT * FROM country WHERE Name LIKE "+ "'"+code+"'";
-				System.out.print(queryBycode);
-				
-				// Execute the query
-				rs = stmt.executeQuery(queryByName) ;
-				
-				
-				countries = new ArrayList<>();
-				private static List<Country> readDataFromDatabase() {
-				    List<Country> countries = new ArrayList<Country>();
-				    try{
-			            // Load the database driver
-			            Class.forName("com.mysql.jdbc.Driver").newInstance() ;
-			            String query = "SELECT * FROM country";
-			            Connection conn = DriverManager.getConnection(dbServer, user, password) ;
+            // Loop through the SQL Exceptions
+            while( se != null ){
+                System.out.println( "State  : " + se.getSQLState()  ) ;
+                System.out.println( "Message: " + se.getMessage()   ) ;
+                System.out.println( "Error  : " + se.getErrorCode() ) ;
 
-			            // Get a statement from the connection
-			            Statement stmt = conn.createStatement() ;
+                se = se.getNextException() ;
+            }
+        }
+        catch( Exception e ){
+            System.out.println( e ) ;
+        }
+	}
+	
+	private static List<Country> searchFromCountryName(String name) {
+        List<Country> countries = new ArrayList<Country>();
+        try{
+            // Load the database driver
+            Class.forName("com.mysql.jdbc.Driver").newInstance() ;
+            String queryByName = "SELECT * FROM country WHERE Name LIKE "+ "'"+name+"'";
+            Connection conn = DriverManager.getConnection(dbServer, user, password) ;
 
-			            // Execute the query
-			            ResultSet rs = stmt.executeQuery(query) ;
-			            //stmt.executeUpdate(query);
-			            
-			            // Loop through the result set
-				while(rs.next()) {
-					Country country = new Country();
-					country.setCode(rs.getString("Code"));
-					country.setName(rs.getString("Name") );
-					country.setContinent(rs.getString("Continent"));
-					country.setSurfaceArea(rs.getFloat("SurfaceArea"));
-					country.setHeadOfState(rs.getString("HeadOfState"));
-					countries.add(country);
-					
-					for (Country c : countries) {
-						System.out.println("=====================================================");
-						System.out.println("");
-						System.out.println(c.toString());
-					}
-				
-				
-				//System.out.println( rs.getString("Code") + "\t" + rs.getString("Name") + 
-					//	"\t" + rs.getString("Continent") + "\t"+ rs.getFloat("SurfaceArea")+ "\t" + rs.getString("HeadOfState")) ;
-			}
-			// Close the result set, statement and the connection
-			//rs.close() ;
-			stmt.close() ;
-			conn.close() ;
-		
-		}
-		catch( SQLException se ){
-			System.out.println( "SQL Exception:" ) ;
+            // Get a statement from the connection
+            Statement stmt = conn.createStatement() ;
 
-			// Loop through the SQL Exceptions
-			while( se != null ){
-				System.out.println( "State  : " + se.getSQLState()  ) ;
-				System.out.println( "Message: " + se.getMessage()   ) ;
-				System.out.println( "Error  : " + se.getErrorCode() ) ;
+            // Execute the query
+            ResultSet rs = stmt.executeQuery(queryByName) ;
+            //stmt.executeUpdate(query);
+            
+            // Loop through the result set
+            while(rs.next()) {
+                Country country = new Country();
+                country.setCode(rs.getString("Code"));
+                country.setName(rs.getString("Name") );
+                country.setContinent(rs.getString("Continent"));
+                country.setSurfaceArea(rs.getFloat("SurfaceArea"));
+                country.setHeadOfState(rs.getString("HeadOfState"));
+                countries.add(country);
+            }
+            
+            // Close the result set, statement and the connection
+            stmt.close() ;
+            conn.close() ;
+        }
+        catch( SQLException se ){
+            System.out.println( "SQL Exception:" ) ;
 
-				se = se.getNextException() ;
-			}
-		}
-		catch( Exception e ){
-			System.out.println( e ) ;
-		}
+            // Loop through the SQL Exceptions
+            while( se != null ){
+                System.out.println( "State  : " + se.getSQLState()  ) ;
+                System.out.println( "Message: " + se.getMessage()   ) ;
+                System.out.println( "Error  : " + se.getErrorCode() ) ;
+
+                se = se.getNextException() ;
+            }
+        }
+        catch( Exception e ){
+            System.out.println( e ) ;
+        }
+        return countries;
+    }
+	
+	
+	private static List<Country> searchFromCountryCode(String code) {
+        List<Country> countries = new ArrayList<Country>();
+        try{
+            // Load the database driver
+            Class.forName("com.mysql.jdbc.Driver").newInstance() ;
+            
+            String queryByCode = "SELECT * FROM country WHERE Name LIKE "+ "'"+code+"'";
+            Connection conn = DriverManager.getConnection(dbServer, user, password) ;
+
+            // Get a statement from the connection
+            Statement stmt = conn.createStatement() ;
+
+            // Execute the query
+            ResultSet rs = stmt.executeQuery(queryByCode) ;
+            //stmt.executeUpdate(query);
+            
+            // Loop through the result set
+            while(rs.next()) {
+                Country country = new Country();
+                country.setCode(rs.getString("Code"));
+                country.setName(rs.getString("Name") );
+                country.setContinent(rs.getString("Continent"));
+                country.setSurfaceArea(rs.getFloat("SurfaceArea"));
+                country.setHeadOfState(rs.getString("HeadOfState"));
+                countries.add(country);
+            }
+            
+            // Close the result set, statement and the connection
+            stmt.close() ;
+            conn.close() ;
+        }
+        catch( SQLException se ){
+            System.out.println( "SQL Exception:" ) ;
+
+            // Loop through the SQL Exceptions
+            while( se != null ){
+                System.out.println( "State  : " + se.getSQLState()  ) ;
+                System.out.println( "Message: " + se.getMessage()   ) ;
+                System.out.println( "Error  : " + se.getErrorCode() ) ;
+
+                se = se.getNextException() ;
+            }
+        }
+        catch( Exception e ){
+            System.out.println( e ) ;
+        }
+        return countries;
+    }
+	
+	private static List<Country> readDataFromDatabase() {
+	    List<Country> countries = new ArrayList<Country>();
+	    try{
+            // Load the database driver
+            Class.forName("com.mysql.jdbc.Driver").newInstance() ;
+            String query = "SELECT * FROM country";
+            Connection conn = DriverManager.getConnection(dbServer, user, password) ;
+
+            // Get a statement from the connection
+            Statement stmt = conn.createStatement() ;
+
+            // Execute the query
+            ResultSet rs = stmt.executeQuery(query) ;
+            //stmt.executeUpdate(query);
+            
+            // Loop through the result set
+            while(rs.next()) {
+                Country country = new Country();
+                country.setCode(rs.getString("Code"));
+                country.setName(rs.getString("Name") );
+                country.setContinent(rs.getString("Continent"));
+                country.setSurfaceArea(rs.getFloat("SurfaceArea"));
+                country.setHeadOfState(rs.getString("HeadOfState"));
+                countries.add(country);
+            }
+            
+            // Close the result set, statement and the connection
+            stmt.close() ;
+            conn.close() ;
+        }
+        catch( SQLException se ){
+            System.out.println( "SQL Exception:" ) ;
+
+            // Loop through the SQL Exceptions
+            while( se != null ){
+                System.out.println( "State  : " + se.getSQLState()  ) ;
+                System.out.println( "Message: " + se.getMessage()   ) ;
+                System.out.println( "Error  : " + se.getErrorCode() ) ;
+
+                se = se.getNextException() ;
+            }
+        }
+        catch( Exception e ){
+            System.out.println( e ) ;
+        }
+	    return countries;
 	}
 }
