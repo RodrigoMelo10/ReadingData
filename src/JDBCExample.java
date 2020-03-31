@@ -86,6 +86,31 @@ public class JDBCExample {
 					System.out.println("");
 					System.out.println(c.toString());
 				}
+				System.out.print("Type the Country Name: ");
+				name = br.readLine();
+				String queryBycode = "SELECT * FROM country WHERE Name LIKE "+ "'"+code+"'";
+				System.out.print(queryBycode);
+				
+				// Execute the query
+				rs = stmt.executeQuery(queryByName) ;
+				
+				
+				countries = new ArrayList<>();
+				while(rs.next()) {
+					Country country = new Country();
+					country.setCode(rs.getString("Code"));
+					country.setName(rs.getString("Name") );
+					country.setContinent(rs.getString("Continent"));
+					country.setSurfaceArea(rs.getFloat("SurfaceArea"));
+					country.setHeadOfState(rs.getString("HeadOfState"));
+					countries.add(country);
+					
+					for (Country c : countries) {
+						System.out.println("=====================================================");
+						System.out.println("");
+						System.out.println(c.toString());
+					}
+				
 				
 				//System.out.println( rs.getString("Code") + "\t" + rs.getString("Name") + 
 					//	"\t" + rs.getString("Continent") + "\t"+ rs.getFloat("SurfaceArea")+ "\t" + rs.getString("HeadOfState")) ;
@@ -94,6 +119,7 @@ public class JDBCExample {
 			//rs.close() ;
 			stmt.close() ;
 			conn.close() ;
+		}
 		}
 		catch( SQLException se ){
 			System.out.println( "SQL Exception:" ) ;
