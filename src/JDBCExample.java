@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.Country;
 
 public class JDBCExample {
@@ -20,14 +19,29 @@ public class JDBCExample {
 		List<Country> countries = new ArrayList<Country>();
 		String name = null;
 		String code = null;
+		boolean mainLoop = true;
+	    int choice;
+	    
+	    while(mainLoop){
+	        System.out.println("Database Main Menu\n");
+	        System.out.print("1.) Retrieve all records stored in the database table \n");
+	        System.out.print("2.) Retrieve records by country name.\n");
+	        System.out.print("3.) Retrieve records by country code.\n");
+	        System.out.print("4.) Add new records into the database.\n");
+	        System.out.print("5.) Exit\n");
+	        System.out.print("\nEnter Your Menu Choice: ");
+
+	        choice = Integer.parseInt(br.readLine());
+	    
 		try{
 			// Load the database driver
 			Class.forName("com.mysql.jdbc.Driver").newInstance() ;
-			
-			String dbServer = "jdbc:mysql://52.50.23.197:3306/world";
-			String user = "cctstudent";
-			String password = "Pass1234!";
-			String query = "SELECT * FROM country";
+			 //It's final because we cannot change the value
+		    // this variables we can use in any function, to keeep organized	
+	      static final String dbServer = "jdbc:mysql://52.50.23.197:3306/world";
+	      static final String user = "cctstudent";
+	      static final String password = "Pass1234!";
+	      static final String query = "SELECT * FROM country";
 			
 			String queryByCode = "SELECT * FROM country where country.name ="+ code;
 			//String query = "INSERT INTO user( first_name, second_name) values ('Stivie' , 'Wonder');";
@@ -42,7 +56,22 @@ public class JDBCExample {
 			//stmt.executeUpdate(query);
 			
 			// Loop through the result set
-			
+			private static List<Country> readDataFromDatabase() {
+			    List<Country> countries = new ArrayList<Country>();
+			    try{
+		            // Load the database driver
+		            Class.forName("com.mysql.jdbc.Driver").newInstance() ;
+		            String query = "SELECT * FROM country";
+		            Connection conn = DriverManager.getConnection(dbServer, user, password) ;
+
+		            // Get a statement from the connection
+		            Statement stmt = conn.createStatement() ;
+
+		            // Execute the query
+		            ResultSet rs = stmt.executeQuery(query) ;
+		            //stmt.executeUpdate(query);
+		            
+		            // Loop through the result set
 			
 			while(rs.next()) {
 				Country country = new Country();
@@ -96,6 +125,22 @@ public class JDBCExample {
 				
 				
 				countries = new ArrayList<>();
+				private static List<Country> readDataFromDatabase() {
+				    List<Country> countries = new ArrayList<Country>();
+				    try{
+			            // Load the database driver
+			            Class.forName("com.mysql.jdbc.Driver").newInstance() ;
+			            String query = "SELECT * FROM country";
+			            Connection conn = DriverManager.getConnection(dbServer, user, password) ;
+
+			            // Get a statement from the connection
+			            Statement stmt = conn.createStatement() ;
+
+			            // Execute the query
+			            ResultSet rs = stmt.executeQuery(query) ;
+			            //stmt.executeUpdate(query);
+			            
+			            // Loop through the result set
 				while(rs.next()) {
 					Country country = new Country();
 					country.setCode(rs.getString("Code"));
