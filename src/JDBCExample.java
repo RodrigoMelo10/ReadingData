@@ -32,6 +32,72 @@ public class JDBCExample {
 	        System.out.print("\nEnter Your Menu Choice: ");
 
 	        choice = Integer.parseInt(br.readLine());
+	        switch(choice){
+		    case 1:
+		        countries = readDataFromDatabase();
+		        for (Country country : countries) {
+	                System.out.println(country.toString());
+	            }
+		        break;
+		    case 2: 
+		        System.out.println("\nType the Country name: ");
+		        name = br.readLine();
+		        
+		        countries = searchFromCountryName(name);
+	            
+	            for (Country country : countries) {
+	                System.out.println(country.toString());
+	            }
+	            countries = new ArrayList<Country>(); 
+		        break;
+		    case 3:
+		        System.out.println("\nType the Country code: ");
+		        code = br.readLine();
+		        
+		        countries = searchFromCountryCode(code);
+	            
+	            for (Country country : countries) {
+	                System.out.println(country.toString());
+	            }
+	            countries = new ArrayList<Country>();
+		        break;
+		    case 4: 
+		        //Definitions
+		        Country c = new Country();
+		        System.out.println("Enter The Coutry Name: ");
+		        c.setName(br.readLine());
+		        
+		        System.out.println("Enter The Coutry Code: ");
+	            c.setCode(br.readLine());
+	            
+	            System.out.println("Enter The Coutry Continent: ");
+	            c.setContinent(br.readLine());
+		        
+	            System.out.println("Enter The Coutry State: ");
+	            c.setHeadOfState(br.readLine());
+	            
+	            System.out.println("Enter The Coutry Suface Area: ");
+	            c.setSurfaceArea(Float.parseFloat(br.readLine()));
+	            
+	            System.out.println("Enter The Coutry Head Of State: ");
+	            c.setHeadOfState(br.readLine());
+	            
+	            insertCountryIntoDatabase(c);
+	            
+	            System.out.println("Country inserted sucessifully!!");
+		        break;
+		    case 5: 
+		        System.out.println("Exiting...");
+		        System.exit(0);
+		         break;
+		    default :
+		             break;
+
+		    }
+		    }
+		}
+		
+	        
 	    
 		try{
 			// Load the database driver
@@ -164,7 +230,7 @@ public class JDBCExample {
 			//rs.close() ;
 			stmt.close() ;
 			conn.close() ;
-		}
+		
 		}
 		catch( SQLException se ){
 			System.out.println( "SQL Exception:" ) ;
