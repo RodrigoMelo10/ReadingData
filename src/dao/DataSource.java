@@ -65,4 +65,39 @@ public class DataSource {
 		return rs;
 	}
 	
+	// THIS IS GOING TO BE A GENERIC METHOD TO DO
+	// ANY INSERT STATEMENT THAT WE PASS IN USING THE 
+	// QUERY VARIABLE
+	public boolean save(String query) {
+		
+		try {
+			
+			// NOTE THAT HERE WE WON'T NEED
+			// ANY RESULT SET, AS AN INSERT STATEMENT
+			// DOES NOT RETURN VALUES
+			stmt.execute( query );
+			return true;
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
 	
+	// AND FINALLY WE HAVE A SEPARATE METHOD TO 
+	// CLOSE THE STATEMENT AND THE CONNECTION
+	public void closing() {
+		try {
+			stmt.close();
+			conn.close();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+}
+
