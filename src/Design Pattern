@@ -1,0 +1,3 @@
+We have used the Factory design pattern in the CountryDAO which is an abstract class that implements DAO methods
+ and Singleton design pattern to create and execute database operations.The DataSource creates and returns
+ the database connection and execute the queries.
