@@ -1,13 +1,13 @@
 package dao;
 
-public class Country {
+public class CountryDAO {
 	private String Name;
 	private String Continent;
 	private String Code;
 	private Float SurfaceArea;
 	private String HeadOfState;
 	
-	public Country(String name, String continent, String code, Float surfaceArea, String headOfState) {
+	public CountryDAO(String name, String continent, String code, Float surfaceArea, String headOfState) {
 		super();
 		Name = name;
 		Continent = continent;
@@ -16,7 +16,7 @@ public class Country {
 		HeadOfState = headOfState;
 	}
 
-	public Country() {
+	public CountryDAO() {
 		super();
 		
 	}

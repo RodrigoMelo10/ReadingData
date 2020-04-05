@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.Country;
+import dao.CountryDAO;
 import dao.CountryDAO;
 import dao.MySQLCoutryDAO;
 
@@ -16,7 +16,7 @@ public class DataBaseMain {
 	 */
 	public static void main( String args[] ) throws IOException {   
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	    List<Country> countries = new ArrayList<Country>();
+	    List<CountryDAO> countryDAOs = new ArrayList<CountryDAO>();
 	 
 	    // NOW THE CLIENT DOES NOT HAVE ANYTHING TO DO
         // THE THE DATABASE CLASS. 
@@ -44,36 +44,36 @@ public class DataBaseMain {
 
 	    switch(choice){
 	    case 1:
-	        countries = db.getCountries();
-	        for (Country country : countries) {
-                System.out.println(country.toString());
+	        countryDAOs = db.getCountries();
+	        for (CountryDAO countryDAO : countryDAOs) {
+                System.out.println(countryDAO.toString());
             }
 	        break;
 	    case 2: 
 	        System.out.println("\nType the Country name: ");
 	        name = br.readLine();
 	        
-	        countries = db.searchFromCountryName(name);
+	        countryDAOs = db.searchFromCountryName(name);
             
-            for (Country country : countries) {
-                System.out.println(country.toString());
+            for (CountryDAO countryDAO : countryDAOs) {
+                System.out.println(countryDAO.toString());
             }
-            countries = new ArrayList<Country>(); 
+            countryDAOs = new ArrayList<CountryDAO>(); 
 	        break;
 	    case 3:
 	        System.out.println("\nType the Country code: ");
 	        code = br.readLine();
 	        
-	        countries = db.searchFromCountryCode(code);
+	        countryDAOs = db.searchFromCountryCode(code);
             
-            for (Country country : countries) {
-                System.out.println(country.toString());
+            for (CountryDAO countryDAO : countryDAOs) {
+                System.out.println(countryDAO.toString());
             }
-            countries = new ArrayList<Country>();
+            countryDAOs = new ArrayList<CountryDAO>();
 	        break;
 	    case 4: 
 	        //Definitions
-	        Country c = new Country();
+	        CountryDAO c = new CountryDAO();
 	        System.out.println("Enter The Coutry Name: ");
 	        c.setName(br.readLine());
 	        
