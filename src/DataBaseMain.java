@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Country;
 
-public class JDBCExample {
+public class DataBaseMain {
 
     //It's final because we cannot change the value
     // this variables we can use in any function, to keeep organized
